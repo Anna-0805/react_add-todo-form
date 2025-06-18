@@ -4,6 +4,8 @@ import { Todo } from '../types/Todo';
 type Props = {
   todos: Todo[];
 };
+/*Приймає todos як пропси.
+Відображає кожну задачу через компонент TodoInfo*/
 
 export const TodoList: React.FC<Props> = ({ todos }) => {
   return (

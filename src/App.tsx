@@ -8,36 +8,51 @@ import { Todo } from './components/types/Todo';
 
 export const App: React.FC = () => {
   const [todos, setTodos] = useState<Todo[]>([]); /*список todos*/
-  const [title, setTitle] = useState(''); /*выбранного пользователя (userId)*/
+  const [title, setTitle] = useState(''); /*заголовок новой задачи*/
   const [userId, setUserId] = useState(0); /*выбранного пользователя (userId)*/
   const [isTouched, setIsTouched] =
-    useState(false); /*состояние ошибок (isTouched для показа ошибок)*/
+    useState(
+      false,
+    ); /*для валидации, взаимодействовал ли пользователь с формой*/
 
   const selectedUser = users.find(user => user.id === userId);
+  /*ищем пользователя по userId*/
 
   const handleAddTodo = (event: React.FormEvent) => {
-    event.preventDefault();
-    setIsTouched(true);
+    event.preventDefault(); /*предостварщаем перезапуск страницы*/
+    setIsTouched(true); /*включаем валидацию*/
 
     if (!title.trim() || userId === 0) {
-      return;
+      return; /*если заглавие пустое и пользователь не выбран - ничего не делаем*/
     }
 
     const cleanedTitle = title.replace(/[^\p{L}0-9 ]/giu, '');
+    /*очищаем заглавие от специальных символов*/
 
+    /*создавем новый todo*/
     const newTodo: Todo = {
       id: todos.length > 0 ? Math.max(...todos.map(t => t.id)) + 1 : 1,
+      /*Якщо список todos не порожній: беремо максимальний id і додаємо 1.
+Якщо список порожній: id = 1.
+Це потрібно, щоб уникнути конфліктів id при рендерінгу (React вимагає унікальні ключі).
+*/
       title: cleanedTitle,
       userId,
       completed: false,
       user: selectedUser!,
+      /*сам об’єкт користувача (selectedUser!).
+! вказує TypeScript, що ми впевнені: це значення не є undefined*/
     };
 
+    /*добавляем в массив, очищаем поля*/
     setTodos([...todos, newTodo]);
     setTitle('');
     setUserId(0);
     setIsTouched(false);
   };
+
+  /*Повертають isTouched у false,
+щойно користувач починає щось змінювати — щоб прибрати повідомлення про помилки.*/
 
   const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(event.target.value);

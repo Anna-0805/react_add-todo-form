@@ -4,6 +4,8 @@ type Props = {
   todo: Todo;
 };
 
+/*Показує заголовок і користувача.
+Якщо задача виконана (completed: true), додає клас TodoInfo--completed.*/
 export const TodoInfo: React.FC<Props> = ({ todo }) => {
   return (
     <article
